@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rubiks Cube</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- https://github.com/ldez/cubejs -->
+    <script type="text/javascript" src="node_modules/cubejs/lib/cube.js"></script>
+    <script type="text/javascript" src="node_modules/cubejs/lib/solve.js"></script>
+
+    <script type="module" src="./main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="scene-container"><!-- Canvas here --></div>
+        <div class="info"> 
+            <h2 id="info-header"></h2>
+            <p id="info-para"></p>
+            <button id="next">next</button>
+            <button id="previous">previous</button>
+        </div>
+    </div>
+</body>
+</html>
