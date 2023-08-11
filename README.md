@@ -10,3 +10,4 @@ https://discoverthreejs.com/
 http://kociemba.org/cube.htm
 https://www.youtube.com/watch?v=A6JyElruhwE
 http://d4m4s74.pythonanywhere.com/
+https://github.com/ldez/cubejs

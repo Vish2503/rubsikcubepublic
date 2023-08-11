@@ -13,6 +13,7 @@ function setAnimationSpeed(speed) {
     const defaultSpeed = Math.PI * 2;
     if (!speed) {
         AnimationSpeed = defaultSpeed
+        return
     } 
     AnimationSpeed = speed;
 }
@@ -26,12 +27,24 @@ function createWorld(container) {
 }
 
 // this function does a move on the rubiks cube when called, both the animation and moving the cube around.
+const allowedMoves = [
+    "R", "L", "U", "D", "F", "B", "M", "E", "S", "x", "y", "z", "r", "l", "u", "d", "f", "b", 
+    "R2", "L2", "U2", "D2", "F2", "B2", "M2", "E2", "S2", "x2", "y2", "z2", "r2", "l2", "u2", "d2", "f2", "b2", 
+    "R3", "L3", "U3", "D3", "F3", "B3", "M3", "E3", "S3", "x3", "y3", "z3", "r3", "l3", "u3", "d3", "f3", "b3", 
+    "R'", "L'", "U'", "D'", "F'", "B'", "M'", "E'", "S'", "x'", "y'", "z'", "r'", "l'", "u'", "d'", "f'", "b'", 
+    "R2'", "L2'", "U2'", "D2'", "F2'", "B2'", "M2'", "E2'", "S2'", "x2'", "y2'", "z2'", "r2'", "l2'", "u2'", "d2'", "f2'", "b2'", 
+    "R3'", "L3'", "U3'", "D3'", "F3'", "B3'", "M3'", "E3'", "S3'", "x3'", "y3'", "z3'", "r3'", "l3'", "u3'", "d3'", "f3'", "b3'"
+    ]
 function move(move) {
 
     // using a promise to ensure that we will wait for the whole animation to finish and then move on to other moves
     return new Promise(resolve => {
         // this global variable will let us know whenever we are animating so we can stop other controls which may cause issues with the animation
         currentlyAnimating = true
+        if (!allowedMoves.includes(move)) {
+            resolve()
+            return
+        }
         const [x, y, z, dir, rotatingAround] = getMoveInfo(move)
 
         // i_, j_ and k_ will be the position of the center piece which will actually rotate and the other pieces on the face or cube will be attached to the centerpiece and move together
@@ -169,22 +182,21 @@ function getMoveInfo(move) {
     let x = [0,1,2]
     let y = [0,1,2]
     let z = [0,1,2]
-    let dir
+    let dir = -1
     let rotatingAround
     if (!move.charAt(1)) {
         dir = -1
-    } else if (move.charAt(1) === "'") {
-        dir = 1
-    }
-    else if (move.charAt(1) === "2") {
+    } else if (move.charAt(1) === "2") {
         dir = -2
     }
     else if (move.charAt(1) === "3") {
         dir = -3
     }
-    else if (move.charAt(1) === "3") {
-        dir = -3
-    }
+
+    if (move.charAt(move.length - 1) === "'") {
+        dir *= -1
+    } 
+    
     switch (move.charAt(0)) {
         case "R":
             x = [2]
@@ -540,14 +552,25 @@ function generateScramble() {
     return scramble
 }
 
-let initialized = false;
 function solveTwoPhase() {
-    if (!initialized) {
+    try {
+        let cube = new Cube()
+        cube = Cube.fromString(getCubeString())
+        return cube.solve().split(" ")
+    } catch (error) {
         Cube.initSolver()
-        initialized = true
+        let cube = new Cube()
+        cube = Cube.fromString(getCubeString())
+        return cube.solve().split(" ")
     }
-    let cube = new Cube()
-    cube = Cube.fromString(getCubeString())
-    return cube.solve().split(" ")
 }
-export { createWorld, world, rubiksCube, currentlyAnimating, move, getCubeString, getNotation, notationPositions, generateScramble, setAnimationSpeed, solveTwoPhase }
+
+function reverseMove(move) {
+    if (move.charAt(move.length - 1) === "'") {
+        return move.slice(0,-1)
+    } else {
+        return move += "'"
+    }
+}
+
+export { createWorld, world, rubiksCube, currentlyAnimating, allowedMoves, move, getCubeString, getNotation, notationPositions, generateScramble, setAnimationSpeed, solveTwoPhase, reverseMove }
