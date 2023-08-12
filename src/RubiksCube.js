@@ -538,7 +538,7 @@ function generateScramble() {
     scramble.push(getRandomMove())
     scramble.push(getRandomMove())
     while (scramble[0].charAt(0) === scramble[1].charAt(1)) {
-        scramble[1] = getRandomMove
+        scramble[1] = getRandomMove()
     }
 
     for (let i = 2; i < 25; i++) {
